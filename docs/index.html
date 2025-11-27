@@ -27,6 +27,7 @@
                     animation: {
                         'blob': 'blob 7s infinite',
                         'float': 'float 6s ease-in-out infinite',
+                        'spin-slow': 'spin 3s linear infinite', // 調整載入動畫速度
                     },
                     keyframes: {
                         blob: {
@@ -74,23 +75,18 @@
         }
         
         .fade-in {
-            animation: fadeIn 1s ease-in-out;
+            animation: fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* 影片播放按鈕特效 */
-        .play-btn-pulse {
-            box-shadow: 0 0 0 0 rgba(79, 209, 197, 0.7);
-            animation: pulse-teal 2s infinite;
-        }
-        @keyframes pulse-teal {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(79, 209, 197, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(79, 209, 197, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(79, 209, 197, 0); }
-        }
+        /* 程式碼區塊的高亮樣式微調 */
+        .code-keyword { color: #f472b6; } /* pink-400 */
+        .code-string { color: #4ade80; } /* green-400 */
+        .code-comment { color: #6b7280; font-style: italic; } /* gray-500 */
+        .code-func { color: #60a5fa; } /* blue-400 */
     </style>
 </head>
 <body class="bg-gray-950 text-gray-100 font-sans antialiased selection:bg-teal-500 selection:text-white overflow-x-hidden">
@@ -99,7 +95,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <i class="fa-solid fa-earth-americas text-teal-400 text-2xl mr-2 animate-spin-slow"></i>
+                    <i class="fa-solid fa-earth-americas text-teal-400 text-2xl mr-2"></i>
                     <span class="font-bold text-xl tracking-wider text-white">PyGMT</span>
                 </div>
                 <div class="hidden md:block">
@@ -140,9 +136,9 @@
                 <a href="#install" class="px-8 py-4 bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-white font-bold rounded-xl shadow-lg shadow-teal-500/20 transform hover:-translate-y-1 transition duration-200">
                     立即開始
                 </a>
-                <a href="https://www.youtube.com/watch?v=Dgf6ijduNoE" target="_blank" class="px-8 py-4 glass-panel text-gray-200 font-bold rounded-xl hover:bg-white/10 flex items-center justify-center gap-2 transition duration-200 group">
-                    <i class="fa-brands fa-youtube text-red-500 group-hover:scale-110 transition-transform"></i>
-                    觀看教學影片
+                <a href="#demo" class="px-8 py-4 glass-panel text-gray-200 font-bold rounded-xl hover:bg-white/10 flex items-center justify-center gap-2 transition duration-200">
+                    <i class="fa-solid fa-laptop-code"></i>
+                    試玩 Demo
                 </a>
             </div>
         </div>
@@ -189,87 +185,62 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-16">
                 <span class="text-teal-400 font-bold tracking-wider text-sm uppercase">Tutorial Highlights</span>
-                <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">來自 EGU 2022 課程的實戰應用</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">EGU 2022 實戰應用</h2>
                 <p class="mt-4 text-gray-400 max-w-2xl mx-auto">
                     參考自 PyGMT 官方教學影片，涵蓋從基礎製圖到進階 3D 分析的四大主題。
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
                 <div class="glass-panel rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-teal-900/20 transition duration-300 flex flex-col">
                     <div class="h-48 bg-gradient-to-br from-gray-800 to-gray-700 flex items-center justify-center relative overflow-hidden group">
                         <i class="fa-solid fa-map text-6xl text-gray-600 group-hover:text-teal-400 transition duration-500 transform group-hover:scale-110"></i>
-                        <div class="absolute bottom-3 right-3 bg-black/50 px-2 py-1 rounded text-xs text-white">Tutorial by Leo</div>
                     </div>
                     <div class="p-8 flex-grow">
                         <h3 class="text-xl font-bold text-white mb-3">1. 你的第一張 PyGMT 地圖</h3>
                         <p class="text-gray-400 text-sm mb-4">
-                            學習地圖解剖學。如何設置底圖 (Basemap)、海岸線 (Coastlines)、地圖框 (Frame) 與色標 (Colorbar)。專注於製作資訊豐富且美觀的平面地圖。
+                            學習地圖解剖學。如何設置底圖、海岸線、地圖框與色標。專注於製作資訊豐富且美觀的平面地圖。
                         </p>
-                        <ul class="text-gray-500 text-xs space-y-1 font-mono">
-                            <li><i class="fa-solid fa-check text-teal-500 mr-2"></i>Map Configuration</li>
-                            <li><i class="fa-solid fa-check text-teal-500 mr-2"></i>Layout Design</li>
-                        </ul>
                     </div>
                 </div>
-
                 <div class="glass-panel rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-blue-900/20 transition duration-300 flex flex-col">
                     <div class="h-48 bg-gradient-to-br from-gray-800 to-gray-700 flex items-center justify-center relative overflow-hidden group">
                          <i class="fa-solid fa-sliders text-6xl text-gray-600 group-hover:text-blue-400 transition duration-500 transform group-hover:scale-110"></i>
-                         <div class="absolute bottom-3 right-3 bg-black/50 px-2 py-1 rounded text-xs text-white">Tutorial by Max</div>
                     </div>
                     <div class="p-8 flex-grow">
                         <h3 class="text-xl font-bold text-white mb-3">2. 互動式海洋數據分析</h3>
                         <p class="text-gray-400 text-sm mb-4">
-                            結合 <strong>Pandas</strong> 與 <strong>Xarray</strong>。展示如何利用 Python 的 Panel 庫製作「互動式滑桿」，動態觀察不同深度的海洋溫度變化。
+                            結合 Pandas 與 Xarray。展示如何利用 Python Panel 製作「互動式滑桿」，動態觀察海洋溫度變化。
                         </p>
-                        <ul class="text-gray-500 text-xs space-y-1 font-mono">
-                            <li><i class="fa-solid fa-check text-blue-500 mr-2"></i>Interactive Widgets</li>
-                            <li><i class="fa-solid fa-check text-blue-500 mr-2"></i>Xarray Integration</li>
-                        </ul>
                     </div>
                 </div>
-
                 <div class="glass-panel rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-red-900/20 transition duration-300 flex flex-col">
                     <div class="h-48 bg-gradient-to-br from-gray-800 to-gray-700 flex items-center justify-center relative overflow-hidden group">
                         <i class="fa-solid fa-rocket text-6xl text-gray-600 group-hover:text-red-400 transition duration-500 transform group-hover:rotate-12"></i>
-                        <div class="absolute bottom-3 right-3 bg-black/50 px-2 py-1 rounded text-xs text-white">Tutorial by Andre</div>
                     </div>
                     <div class="p-8 flex-grow">
                         <h3 class="text-xl font-bold text-white mb-3">3. 火星奧林帕斯山 3D 視角</h3>
                         <p class="text-gray-400 text-sm mb-4">
-                            探索地球以外的數據。繪製火星最高峰——奧林帕斯山 (Olympus Mons) 的 <strong>3D 陰影透視圖</strong>，並學習如何添加「概覽嵌入圖 (Inset Map)」來標示位置。
+                            探索地球以外的數據。繪製火星最高峰的 3D 陰影透視圖，並學習如何添加「概覽嵌入圖」。
                         </p>
-                        <ul class="text-gray-500 text-xs space-y-1 font-mono">
-                            <li><i class="fa-solid fa-check text-red-500 mr-2"></i>Planetary Data</li>
-                            <li><i class="fa-solid fa-check text-red-500 mr-2"></i>3D Perspective</li>
-                        </ul>
                     </div>
                 </div>
-
                 <div class="glass-panel rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-green-900/20 transition duration-300 flex flex-col">
                     <div class="h-48 bg-gradient-to-br from-gray-800 to-gray-700 flex items-center justify-center relative overflow-hidden group">
                         <i class="fa-solid fa-layer-group text-6xl text-gray-600 group-hover:text-green-400 transition duration-500 transform group-hover:scale-110"></i>
-                        <div class="absolute bottom-3 right-3 bg-black/50 px-2 py-1 rounded text-xs text-white">Tutorial by Wei Ji</div>
                     </div>
                     <div class="p-8 flex-grow">
                         <h3 class="text-xl font-bold text-white mb-3">4. LiDAR 點雲轉數值地形</h3>
                         <p class="text-gray-400 text-sm mb-4">
-                            處理高密度的 LiDAR 數據（以威靈頓為例）。演示資料預處理流程，將散亂的點雲 (Point Cloud) 轉化為高品質的網格化 (Raster) 地形模型。
+                            處理高密度的 LiDAR 數據。演示將散亂點雲轉化為高品質網格化地形模型的完整流程。
                         </p>
-                        <ul class="text-gray-500 text-xs space-y-1 font-mono">
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i>Point Cloud Processing</li>
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i>Grid Generation</li>
-                        </ul>
                     </div>
                 </div>
-
             </div>
             
             <div class="mt-12 text-center">
                 <a href="https://www.youtube.com/watch?v=Dgf6ijduNoE" target="_blank" class="inline-flex items-center text-teal-400 hover:text-teal-300 font-bold transition">
-                    <span class="mr-2">在 YouTube 上觀看完整 1.5 小時課程</span>
+                    <span class="mr-2">在 YouTube 上觀看完整課程</span>
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
@@ -280,6 +251,10 @@
         <div class="absolute right-0 top-1/4 w-1/2 h-1/2 bg-teal-500/5 rounded-full filter blur-3xl -z-10"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-8 text-center md:text-left">
+                <h2 class="text-3xl font-bold text-white">Interactive Demo: 地形數據繪圖</h2>
+                <p class="text-gray-400 mt-2">嘗試載入數據並繪製全球地形圖 (Earth Relief)。</p>
+            </div>
             <div class="flex flex-col lg:flex-row gap-8 items-stretch h-auto lg:h-[600px]">
                 
                 <div class="lg:w-1/2 flex flex-col animate-float" style="animation-delay: 1s;">
@@ -289,7 +264,7 @@
                             <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
                             <div class="w-3 h-3 rounded-full bg-green-500"></div>
                         </div>
-                        <span class="text-xs text-gray-400 font-mono">quick_start.py</span>
+                        <span class="text-xs text-gray-400 font-mono">plot_relief.py</span>
                         <div class="text-gray-500 text-xs"><i class="fa-brands fa-python"></i></div>
                     </div>
                     <div class="bg-[#0d1117] p-6 font-mono text-sm overflow-auto flex-grow rounded-b-xl border border-gray-700 relative group shadow-2xl">
@@ -297,26 +272,30 @@
                             <i class="fa-regular fa-copy mr-1"></i> Copy
                         </button>
                         
-                        <div id="code-block" class="text-gray-300 leading-relaxed">
-<span class="text-pink-400">import</span> pygmt
+                        <div id="code-block" class="text-gray-300 leading-relaxed whitespace-pre-wrap">
+<span class="code-keyword">import</span> pygmt
 
-<span class="text-gray-500 italic"># 建立繪圖實例 (Figure Instance)</span>
+<span class="code-comment"># 1. 載入地球地形數據 (grid)</span>
+<span class="code-comment"># resolution="10m" 代表解析度為 10 arc-minutes</span>
+grid = pygmt.datasets.load_earth_relief(resolution=<span class="code-string">"10m"</span>)
+
 fig = pygmt.Figure()
 
-<span class="text-gray-500 italic"># 繪製全球海岸線地圖</span>
-<span class="text-gray-500 italic"># region="g": Global domain</span>
-<span class="text-gray-500 italic"># projection="W15c": Mollweide 投影</span>
-fig.coast(
-    region=<span class="text-green-400">"g"</span>,
-    projection=<span class="text-green-400">"W15c"</span>,
-    land=<span class="text-green-400">"#666666"</span>,
-    water=<span class="text-green-400">"skyblue"</span>,
-    frame=<span class="text-green-400">"afg"</span>
+<span class="code-comment"># 2. 繪製網格影像 (grdimage)</span>
+<span class="code-comment"># projection="R12c": Winkel Tripel 投影 (寬度12cm)</span>
+<span class="code-comment"># cmap="geo": 使用地理專用色票</span>
+fig.grdimage(
+    grid=grid,
+    projection=<span class="code-string">"R12c"</span>,
+    cmap=<span class="code-string">"geo"</span>
 )
 
-<span class="text-gray-500 italic"># 儲存或顯示</span>
-fig.show()
-                        </div>
+<span class="code-comment"># 3. 添加色標 (Colorbar)</span>
+<span class="code-comment"># frame 設定刻度、標籤與單位</span>
+fig.colorbar(frame=[<span class="code-string">"a2500"</span>, <span class="code-string">"x+lElevation"</span>, <span class="code-string">"y+lm"</span>])
+
+<span class="code-comment"># 4. 顯示圖像</span>
+fig.show()</div>
                     </div>
                     <button onclick="runSimulation()" class="mt-6 bg-teal-600 hover:bg-teal-500 text-white font-bold py-4 px-6 rounded-xl transition shadow-lg shadow-teal-900/50 flex items-center justify-center group">
                         <i class="fa-solid fa-play mr-2 group-hover:scale-110 transition-transform"></i> 執行繪圖 (Run Code)
@@ -326,16 +305,16 @@ fig.show()
                 <div class="lg:w-1/2 glass-panel rounded-xl p-6 flex flex-col relative overflow-hidden border border-gray-700/50">
                     <div class="absolute top-4 left-4 flex items-center gap-2 z-10">
                         <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
-                        <span class="text-xs text-gray-400 uppercase tracking-widest font-bold">Live Preview</span>
+                        <span class="text-xs text-gray-400 uppercase tracking-widest font-bold">Output Preview</span>
                     </div>
                     
-                    <div id="output-area" class="flex-grow flex items-center justify-center bg-black/20 rounded-lg border border-dashed border-gray-700 relative backdrop-blur-sm">
+                    <div id="output-area" class="flex-grow flex items-center justify-center bg-black/20 rounded-lg border border-dashed border-gray-700 relative backdrop-blur-sm overflow-hidden">
                         
                         <div id="initial-state" class="text-center text-gray-500">
                             <div class="w-20 h-20 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <i class="fa-solid fa-code text-3xl"></i>
+                                <i class="fa-solid fa-image text-3xl"></i>
                             </div>
-                            <p class="font-light">點擊左側「執行繪圖」<br>即可預覽 PyGMT 輸出</p>
+                            <p class="font-light">點擊左側「執行繪圖」<br>查看渲染結果</p>
                         </div>
 
                         <div id="loading-spinner" class="hidden text-center">
@@ -343,30 +322,15 @@ fig.show()
                                 <div class="absolute top-0 left-0 w-full h-full border-4 border-teal-500/30 rounded-full"></div>
                                 <div class="absolute top-0 left-0 w-full h-full border-4 border-teal-400 rounded-full border-t-transparent animate-spin"></div>
                             </div>
-                            <p class="text-teal-400 font-mono text-sm typing-effect">Processing geodata...</p>
+                            <p class="text-teal-400 font-mono text-sm">Downloading earth_relief_10m.nc...</p>
+                            <p class="text-gray-500 font-mono text-xs mt-2">Plotting grid...</p>
                         </div>
 
-                        <div id="result-image" class="hidden w-full h-full p-6 fade-in flex items-center justify-center">
-                            <div class="relative w-full max-w-md">
-                                <svg viewBox="0 0 300 150" class="w-full drop-shadow-2xl">
-                                    <defs>
-                                        <linearGradient id="oceanGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
-                                            <stop offset="100%" style="stop-color:#4682B4;stop-opacity:1" />
-                                        </linearGradient>
-                                    </defs>
-                                    <ellipse cx="150" cy="75" rx="140" ry="70" fill="url(#oceanGrad)" stroke="#333" stroke-width="1"/>
-                                    
-                                    <path d="M10,75 L290,75" stroke="rgba(255,255,255,0.3)" stroke-width="0.5" stroke-dasharray="3,2"/>
-                                    <path d="M150,5 L150,145" stroke="rgba(255,255,255,0.3)" stroke-width="0.5" stroke-dasharray="3,2"/>
-                                    
-                                    <g fill="#666" stroke="none" opacity="0.9">
-                                        <path d="M60,40 Q80,20 100,50 T130,60 T160,40 T200,60" /> 
-                                        <path d="M50,60 Q70,90 90,110 L70,100 Z" /> <path d="M140,50 Q160,80 170,90 L130,80 Z" /> <path d="M180,40 Q220,20 250,50 L230,70 Z" /> <path d="M220,90 Q240,110 260,100 L240,90 Z" /> </g>
-                                    
-                                    <rect x="5" y="5" width="290" height="140" rx="0" fill="none" stroke="#fff" stroke-width="0.5" opacity="0.5"/>
-                                </svg>
-                                <div class="absolute bottom-2 right-2 text-[8px] text-white/50 font-mono">Generated by PyGMT</div>
+                        <div id="result-image" class="hidden w-full h-full p-2 flex items-center justify-center fade-in">
+                            <div class="relative w-full h-full flex items-center justify-center">
+                                <img src="https://www.pygmt.org/latest/_images/sphx_glr_earth_relief_005.png" 
+                                     alt="Earth Relief Map" 
+                                     class="max-w-full max-h-full object-contain rounded shadow-2xl">
                             </div>
                         </div>
                     </div>
@@ -461,7 +425,7 @@ fig.show()
             const navbar = document.getElementById('navbar');
             if (window.scrollY > 20) {
                 navbar.classList.add('shadow-lg');
-                navbar.classList.replace('bg-opacity-70', 'bg-opacity-95'); // Enhance this logic if needed
+                navbar.classList.replace('bg-opacity-70', 'bg-opacity-95');
             } else {
                 navbar.classList.remove('shadow-lg');
             }
@@ -478,18 +442,17 @@ fig.show()
             initial.classList.add('hidden');
             spinner.classList.remove('hidden');
             
-            // 模擬 1.5 秒延遲
+            // 模擬 1.8 秒延遲 (稍微久一點，感覺像在載入數據)
             setTimeout(() => {
                 spinner.classList.add('hidden');
                 result.classList.remove('hidden');
-            }, 1500);
+            }, 1800);
         }
 
         // 複製程式碼功能
         function copyCode() {
-            const code = `import pygmt\nfig = pygmt.Figure()\nfig.coast(region="g", projection="W15c", land="#666666", water="skyblue", frame="afg")\nfig.show()`;
+            const code = `import pygmt\ngrid = pygmt.datasets.load_earth_relief(resolution="10m")\nfig = pygmt.Figure()\nfig.grdimage(grid=grid, projection="R12c", cmap="geo")\nfig.colorbar(frame=["a2500", "x+lElevation", "y+lm"])\nfig.show()`;
             navigator.clipboard.writeText(code).then(() => {
-                // 這裡可以加更優雅的提示，暫時保留 alert
                 const btn = document.querySelector('button[onclick="copyCode()"]');
                 const originalHtml = btn.innerHTML;
                 btn.innerHTML = '<i class="fa-solid fa-check text-green-400"></i> Copied';
