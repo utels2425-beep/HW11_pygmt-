@@ -10,6 +10,7 @@
     
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -21,6 +22,22 @@
                             light: '#4fd1c5',
                             DEFAULT: '#319795',
                             dark: '#285e61',
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
                         }
                     }
                 }
@@ -45,8 +62,9 @@
         
         .glass-panel {
             background: rgba(26, 32, 44, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         .gradient-text {
@@ -55,7 +73,6 @@
             -webkit-text-fill-color: transparent;
         }
         
-        /* 簡單的淡入動畫 */
         .fade-in {
             animation: fadeIn 1s ease-in-out;
         }
@@ -63,24 +80,36 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* 影片播放按鈕特效 */
+        .play-btn-pulse {
+            box-shadow: 0 0 0 0 rgba(79, 209, 197, 0.7);
+            animation: pulse-teal 2s infinite;
+        }
+        @keyframes pulse-teal {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(79, 209, 197, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(79, 209, 197, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(79, 209, 197, 0); }
+        }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans antialiased selection:bg-teal-500 selection:text-white">
+<body class="bg-gray-950 text-gray-100 font-sans antialiased selection:bg-teal-500 selection:text-white overflow-x-hidden">
 
-    <nav class="fixed w-full z-50 glass-panel border-b border-gray-700">
+    <nav class="fixed w-full z-50 glass-panel border-b border-gray-800/50 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <i class="fa-solid fa-earth-americas text-teal-400 text-2xl mr-2"></i>
-                    <span class="font-bold text-xl tracking-wider">PyGMT</span>
+                <div class="flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <i class="fa-solid fa-earth-americas text-teal-400 text-2xl mr-2 animate-spin-slow"></i>
+                    <span class="font-bold text-xl tracking-wider text-white">PyGMT</span>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#features" class="hover:text-teal-400 transition px-3 py-2 rounded-md text-sm font-medium">功能特色</a>
-                        <a href="#demo" class="hover:text-teal-400 transition px-3 py-2 rounded-md text-sm font-medium">線上演示</a>
-                        <a href="#install" class="hover:text-teal-400 transition px-3 py-2 rounded-md text-sm font-medium">快速安裝</a>
-                        <a href="https://www.pygmt.org/" target="_blank" class="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-full text-sm font-bold transition shadow-lg shadow-teal-500/30">
-                            官方文件 <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i>
+                        <a href="#features" class="text-gray-300 hover:text-teal-400 transition px-3 py-2 rounded-md text-sm font-medium">功能特色</a>
+                        <a href="#showcase" class="text-gray-300 hover:text-teal-400 transition px-3 py-2 rounded-md text-sm font-medium">實戰案例</a>
+                        <a href="#demo" class="text-gray-300 hover:text-teal-400 transition px-3 py-2 rounded-md text-sm font-medium">線上演示</a>
+                        <a href="#install" class="text-gray-300 hover:text-teal-400 transition px-3 py-2 rounded-md text-sm font-medium">快速安裝</a>
+                        <a href="https://www.pygmt.org/" target="_blank" class="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-full text-sm font-bold transition shadow-lg shadow-teal-500/30 flex items-center gap-2">
+                            <span>官方文件</span> <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                         </a>
                     </div>
                 </div>
@@ -90,140 +119,255 @@
 
     <section class="relative pt-32 pb-20 overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
-            <div class="absolute top-[-10%] right-[-5%] w-96 h-96 bg-teal-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-            <div class="absolute top-[20%] left-[-10%] w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+            <div class="absolute top-[-10%] right-[-5%] w-96 h-96 bg-teal-600/30 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob"></div>
+            <div class="absolute top-[20%] left-[-10%] w-96 h-96 bg-blue-600/30 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+            <div class="absolute bottom-[-10%] left-[20%] w-96 h-96 bg-purple-600/30 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
         </div>
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-in">
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
-                地球科學繪圖的<br>
-                <span class="gradient-text">現代化神器</span>
+            <div class="inline-block px-4 py-1.5 rounded-full border border-teal-500/30 bg-teal-500/10 text-teal-300 text-xs font-semibold tracking-wide uppercase mb-6 backdrop-blur-sm">
+                基於 Generic Mapping Tools 6
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
+                科學繪圖的<br>
+                <span class="gradient-text">現代化革命</span>
             </h1>
-            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-400 mb-10">
-                結合 Python 的靈活性與 GMT 的強大繪圖引擎。
-                <br>專為科研人員、數據科學家與地理愛好者打造。
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-400 mb-10 leading-relaxed">
+                結合 Python 的靈活性與 GMT 的強大引擎。<br>
+                從簡單的海岸線到複雜的 3D 地形，一行程式碼搞定。
             </p>
-            <div class="flex justify-center gap-4">
-                <a href="#install" class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-teal-600 hover:bg-teal-500 md:py-4 md:text-lg transition shadow-lg shadow-teal-900/50">
-                    開始使用
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#install" class="px-8 py-4 bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-white font-bold rounded-xl shadow-lg shadow-teal-500/20 transform hover:-translate-y-1 transition duration-200">
+                    立即開始
                 </a>
-                <a href="#demo" class="px-8 py-3 border border-gray-600 text-base font-medium rounded-md text-gray-300 hover:bg-gray-800 md:py-4 md:text-lg transition">
-                    查看範例
+                <a href="https://www.youtube.com/watch?v=Dgf6ijduNoE" target="_blank" class="px-8 py-4 glass-panel text-gray-200 font-bold rounded-xl hover:bg-white/10 flex items-center justify-center gap-2 transition duration-200 group">
+                    <i class="fa-brands fa-youtube text-red-500 group-hover:scale-110 transition-transform"></i>
+                    觀看教學影片
                 </a>
             </div>
         </div>
     </section>
 
-    <section id="features" class="py-20 bg-gray-800/50">
+    <section id="features" class="py-20 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-panel p-8 rounded-2xl border-t border-blue-500/20 hover:border-blue-500/50 transition duration-300 group">
+                    <div class="w-14 h-14 bg-blue-900/30 rounded-xl flex items-center justify-center mb-6 text-blue-400 group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-python text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Python 原生體驗</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        與 Pandas、Xarray 和 NumPy 深度整合。直接將 DataFrame 丟給 PyGMT，無需手動處理繁瑣的數據格式轉換。
+                    </p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-2xl border-t border-teal-500/20 hover:border-teal-500/50 transition duration-300 group">
+                    <div class="w-14 h-14 bg-teal-900/30 rounded-xl flex items-center justify-center mb-6 text-teal-400 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-wand-magic-sparkles text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">出版級畫質</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        自動處理地圖邊框、刻度與圖例。繼承 GMT 數十年的繪圖美學，輸出高解析度 PDF/EPS，滿足最嚴格的期刊要求。
+                    </p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-2xl border-t border-purple-500/20 hover:border-purple-500/50 transition duration-300 group">
+                    <div class="w-14 h-14 bg-purple-900/30 rounded-xl flex items-center justify-center mb-6 text-purple-400 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-cube text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">3D 與投影</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        支援超過 30 種地圖投影。輕鬆繪製 3D 地形透視圖、等高線疊加，甚至是行星數據（如火星、月球）。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="showcase" class="py-24 bg-gray-900 relative">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-white">為什麼選擇 PyGMT？</h2>
-                <p class="mt-4 text-gray-400">告別繁瑣的 Shell Script，擁抱 Pythonic 的優雅。</p>
+                <span class="text-teal-400 font-bold tracking-wider text-sm uppercase">Tutorial Highlights</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">來自 EGU 2022 課程的實戰應用</h2>
+                <p class="mt-4 text-gray-400 max-w-2xl mx-auto">
+                    參考自 PyGMT 官方教學影片，涵蓋從基礎製圖到進階 3D 分析的四大主題。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <div class="glass-panel rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-teal-900/20 transition duration-300 flex flex-col">
+                    <div class="h-48 bg-gradient-to-br from-gray-800 to-gray-700 flex items-center justify-center relative overflow-hidden group">
+                        <i class="fa-solid fa-map text-6xl text-gray-600 group-hover:text-teal-400 transition duration-500 transform group-hover:scale-110"></i>
+                        <div class="absolute bottom-3 right-3 bg-black/50 px-2 py-1 rounded text-xs text-white">Tutorial by Leo</div>
+                    </div>
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-xl font-bold text-white mb-3">1. 你的第一張 PyGMT 地圖</h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            學習地圖解剖學。如何設置底圖 (Basemap)、海岸線 (Coastlines)、地圖框 (Frame) 與色標 (Colorbar)。專注於製作資訊豐富且美觀的平面地圖。
+                        </p>
+                        <ul class="text-gray-500 text-xs space-y-1 font-mono">
+                            <li><i class="fa-solid fa-check text-teal-500 mr-2"></i>Map Configuration</li>
+                            <li><i class="fa-solid fa-check text-teal-500 mr-2"></i>Layout Design</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-blue-900/20 transition duration-300 flex flex-col">
+                    <div class="h-48 bg-gradient-to-br from-gray-800 to-gray-700 flex items-center justify-center relative overflow-hidden group">
+                         <i class="fa-solid fa-sliders text-6xl text-gray-600 group-hover:text-blue-400 transition duration-500 transform group-hover:scale-110"></i>
+                         <div class="absolute bottom-3 right-3 bg-black/50 px-2 py-1 rounded text-xs text-white">Tutorial by Max</div>
+                    </div>
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-xl font-bold text-white mb-3">2. 互動式海洋數據分析</h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            結合 <strong>Pandas</strong> 與 <strong>Xarray</strong>。展示如何利用 Python 的 Panel 庫製作「互動式滑桿」，動態觀察不同深度的海洋溫度變化。
+                        </p>
+                        <ul class="text-gray-500 text-xs space-y-1 font-mono">
+                            <li><i class="fa-solid fa-check text-blue-500 mr-2"></i>Interactive Widgets</li>
+                            <li><i class="fa-solid fa-check text-blue-500 mr-2"></i>Xarray Integration</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-red-900/20 transition duration-300 flex flex-col">
+                    <div class="h-48 bg-gradient-to-br from-gray-800 to-gray-700 flex items-center justify-center relative overflow-hidden group">
+                        <i class="fa-solid fa-rocket text-6xl text-gray-600 group-hover:text-red-400 transition duration-500 transform group-hover:rotate-12"></i>
+                        <div class="absolute bottom-3 right-3 bg-black/50 px-2 py-1 rounded text-xs text-white">Tutorial by Andre</div>
+                    </div>
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-xl font-bold text-white mb-3">3. 火星奧林帕斯山 3D 視角</h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            探索地球以外的數據。繪製火星最高峰——奧林帕斯山 (Olympus Mons) 的 <strong>3D 陰影透視圖</strong>，並學習如何添加「概覽嵌入圖 (Inset Map)」來標示位置。
+                        </p>
+                        <ul class="text-gray-500 text-xs space-y-1 font-mono">
+                            <li><i class="fa-solid fa-check text-red-500 mr-2"></i>Planetary Data</li>
+                            <li><i class="fa-solid fa-check text-red-500 mr-2"></i>3D Perspective</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-green-900/20 transition duration-300 flex flex-col">
+                    <div class="h-48 bg-gradient-to-br from-gray-800 to-gray-700 flex items-center justify-center relative overflow-hidden group">
+                        <i class="fa-solid fa-layer-group text-6xl text-gray-600 group-hover:text-green-400 transition duration-500 transform group-hover:scale-110"></i>
+                        <div class="absolute bottom-3 right-3 bg-black/50 px-2 py-1 rounded text-xs text-white">Tutorial by Wei Ji</div>
+                    </div>
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-xl font-bold text-white mb-3">4. LiDAR 點雲轉數值地形</h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            處理高密度的 LiDAR 數據（以威靈頓為例）。演示資料預處理流程，將散亂的點雲 (Point Cloud) 轉化為高品質的網格化 (Raster) 地形模型。
+                        </p>
+                        <ul class="text-gray-500 text-xs space-y-1 font-mono">
+                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i>Point Cloud Processing</li>
+                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i>Grid Generation</li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="glass-panel p-8 rounded-2xl hover:transform hover:-translate-y-2 transition duration-300">
-                    <div class="w-12 h-12 bg-blue-900/50 rounded-lg flex items-center justify-center mb-6 text-blue-400">
-                        <i class="fa-brands fa-python text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-4">Python 優先</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        完全整合至 Python 生態系。支援 Pandas DataFrame、xarray 與 NumPy 陣列，資料處理與繪圖無縫接軌。
-                    </p>
-                </div>
-
-                <div class="glass-panel p-8 rounded-2xl hover:transform hover:-translate-y-2 transition duration-300">
-                    <div class="w-12 h-12 bg-teal-900/50 rounded-lg flex items-center justify-center mb-6 text-teal-400">
-                        <i class="fa-solid fa-layer-group text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-4">出版級品質</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        繼承 GMT 的高解析度向量輸出能力。無論是學術期刊還是海報展示，都能產出最精美的地圖。
-                    </p>
-                </div>
-
-                <div class="glass-panel p-8 rounded-2xl hover:transform hover:-translate-y-2 transition duration-300">
-                    <div class="w-12 h-12 bg-purple-900/50 rounded-lg flex items-center justify-center mb-6 text-purple-400">
-                        <i class="fa-solid fa-globe text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-4">豐富投影</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        內建超過 30 種地圖投影法。從麥卡托投影到極地投影，輕鬆處理複雜的地理空間數據。
-                    </p>
-                </div>
+            <div class="mt-12 text-center">
+                <a href="https://www.youtube.com/watch?v=Dgf6ijduNoE" target="_blank" class="inline-flex items-center text-teal-400 hover:text-teal-300 font-bold transition">
+                    <span class="mr-2">在 YouTube 上觀看完整 1.5 小時課程</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
             </div>
         </div>
     </section>
 
-    <section id="demo" class="py-20">
+    <section id="demo" class="py-24 relative overflow-hidden">
+        <div class="absolute right-0 top-1/4 w-1/2 h-1/2 bg-teal-500/5 rounded-full filter blur-3xl -z-10"></div>
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col lg:flex-row gap-8 items-stretch h-auto lg:h-[600px]">
                 
-                <div class="lg:w-1/2 flex flex-col">
+                <div class="lg:w-1/2 flex flex-col animate-float" style="animation-delay: 1s;">
                     <div class="bg-gray-800 rounded-t-xl p-4 flex items-center justify-between border-b border-gray-700">
                         <div class="flex space-x-2">
                             <div class="w-3 h-3 rounded-full bg-red-500"></div>
                             <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
                             <div class="w-3 h-3 rounded-full bg-green-500"></div>
                         </div>
-                        <span class="text-xs text-gray-400 font-mono">example_plot.py</span>
-                        <div></div>
+                        <span class="text-xs text-gray-400 font-mono">quick_start.py</span>
+                        <div class="text-gray-500 text-xs"><i class="fa-brands fa-python"></i></div>
                     </div>
-                    <div class="bg-gray-900 p-6 font-mono text-sm overflow-auto flex-grow rounded-b-xl border border-gray-700 relative group">
-                        <button onclick="copyCode()" class="absolute top-4 right-4 bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs transition opacity-0 group-hover:opacity-100">
+                    <div class="bg-[#0d1117] p-6 font-mono text-sm overflow-auto flex-grow rounded-b-xl border border-gray-700 relative group shadow-2xl">
+                        <button onclick="copyCode()" class="absolute top-4 right-4 bg-gray-700/50 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded text-xs transition opacity-0 group-hover:opacity-100 backdrop-blur-sm border border-gray-600">
                             <i class="fa-regular fa-copy mr-1"></i> Copy
                         </button>
                         
                         <div id="code-block" class="text-gray-300 leading-relaxed">
-<span class="text-purple-400">import</span> pygmt
+<span class="text-pink-400">import</span> pygmt
 
-<span class="text-gray-500"># 建立繪圖實例</span>
+<span class="text-gray-500 italic"># 建立繪圖實例 (Figure Instance)</span>
 fig = pygmt.Figure()
 
-<span class="text-gray-500"># 繪製海岸線</span>
-<span class="text-gray-500"># region="g" 代表全球</span>
-<span class="text-gray-500"># projection="W15c" 代表 Mollweide 投影，寬度 15cm</span>
-<span class="text-gray-500"># frame="a" 自動添加邊框刻度</span>
+<span class="text-gray-500 italic"># 繪製全球海岸線地圖</span>
+<span class="text-gray-500 italic"># region="g": Global domain</span>
+<span class="text-gray-500 italic"># projection="W15c": Mollweide 投影</span>
 fig.coast(
     region=<span class="text-green-400">"g"</span>,
     projection=<span class="text-green-400">"W15c"</span>,
-    land=<span class="text-green-400">"darkgray"</span>,
+    land=<span class="text-green-400">"#666666"</span>,
     water=<span class="text-green-400">"skyblue"</span>,
-    frame=<span class="text-green-400">"a"</span>
+    frame=<span class="text-green-400">"afg"</span>
 )
 
-<span class="text-gray-500"># 顯示圖像</span>
+<span class="text-gray-500 italic"># 儲存或顯示</span>
 fig.show()
                         </div>
                     </div>
-                    <button onclick="runSimulation()" class="mt-4 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg transition flex items-center justify-center">
-                        <i class="fa-solid fa-play mr-2"></i> 執行繪圖 (Run Code)
+                    <button onclick="runSimulation()" class="mt-6 bg-teal-600 hover:bg-teal-500 text-white font-bold py-4 px-6 rounded-xl transition shadow-lg shadow-teal-900/50 flex items-center justify-center group">
+                        <i class="fa-solid fa-play mr-2 group-hover:scale-110 transition-transform"></i> 執行繪圖 (Run Code)
                     </button>
                 </div>
 
-                <div class="lg:w-1/2 glass-panel rounded-xl p-4 flex flex-col relative overflow-hidden">
-                    <div class="absolute top-4 left-4 text-xs text-gray-400 uppercase tracking-widest font-bold z-10">Output Preview</div>
+                <div class="lg:w-1/2 glass-panel rounded-xl p-6 flex flex-col relative overflow-hidden border border-gray-700/50">
+                    <div class="absolute top-4 left-4 flex items-center gap-2 z-10">
+                        <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+                        <span class="text-xs text-gray-400 uppercase tracking-widest font-bold">Live Preview</span>
+                    </div>
                     
-                    <div id="output-area" class="flex-grow flex items-center justify-center bg-white/5 rounded-lg border border-dashed border-gray-600 relative">
+                    <div id="output-area" class="flex-grow flex items-center justify-center bg-black/20 rounded-lg border border-dashed border-gray-700 relative backdrop-blur-sm">
                         
                         <div id="initial-state" class="text-center text-gray-500">
-                            <i class="fa-solid fa-image text-4xl mb-3 block"></i>
-                            <p>點擊左側「執行繪圖」<br>查看 PyGMT 輸出結果</p>
+                            <div class="w-20 h-20 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fa-solid fa-code text-3xl"></i>
+                            </div>
+                            <p class="font-light">點擊左側「執行繪圖」<br>即可預覽 PyGMT 輸出</p>
                         </div>
 
                         <div id="loading-spinner" class="hidden text-center">
-                            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-teal-400 mb-3"></i>
-                            <p class="text-teal-400 animate-pulse">正在處理地理數據...</p>
+                            <div class="inline-block relative w-16 h-16 mb-4">
+                                <div class="absolute top-0 left-0 w-full h-full border-4 border-teal-500/30 rounded-full"></div>
+                                <div class="absolute top-0 left-0 w-full h-full border-4 border-teal-400 rounded-full border-t-transparent animate-spin"></div>
+                            </div>
+                            <p class="text-teal-400 font-mono text-sm typing-effect">Processing geodata...</p>
                         </div>
 
-                        <div id="result-image" class="hidden w-full h-full p-4 fade-in">
-                            <svg viewBox="0 0 300 150" class="w-full h-full drop-shadow-2xl">
-                                <ellipse cx="150" cy="75" rx="140" ry="70" fill="skyblue" stroke="#333" stroke-width="2"/>
-                                <path d="M50,40 Q80,20 100,50 T150,60 T200,40 T250,60" fill="none" stroke="darkgray" stroke-width="0" />
-                                <path d="M40,50 Q60,30 80,60 L90,90 L60,110 Z" fill="darkgray" opacity="0.8"/> <path d="M120,40 Q150,20 170,50 L160,80 L130,70 Z" fill="darkgray" opacity="0.8"/> <path d="M180,30 Q220,10 240,40 L230,70 L190,60 Z" fill="darkgray" opacity="0.8"/> <path d="M10,75 L290,75" stroke="rgba(0,0,0,0.2)" stroke-dasharray="2,2"/>
-                                <path d="M150,5 L150,145" stroke="rgba(0,0,0,0.2)" stroke-dasharray="2,2"/>
-                                <text x="150" y="140" text-anchor="middle" font-size="8" fill="#333" font-family="sans-serif">Generated by PyGMT</text>
-                            </svg>
+                        <div id="result-image" class="hidden w-full h-full p-6 fade-in flex items-center justify-center">
+                            <div class="relative w-full max-w-md">
+                                <svg viewBox="0 0 300 150" class="w-full drop-shadow-2xl">
+                                    <defs>
+                                        <linearGradient id="oceanGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#4682B4;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <ellipse cx="150" cy="75" rx="140" ry="70" fill="url(#oceanGrad)" stroke="#333" stroke-width="1"/>
+                                    
+                                    <path d="M10,75 L290,75" stroke="rgba(255,255,255,0.3)" stroke-width="0.5" stroke-dasharray="3,2"/>
+                                    <path d="M150,5 L150,145" stroke="rgba(255,255,255,0.3)" stroke-width="0.5" stroke-dasharray="3,2"/>
+                                    
+                                    <g fill="#666" stroke="none" opacity="0.9">
+                                        <path d="M60,40 Q80,20 100,50 T130,60 T160,40 T200,60" /> 
+                                        <path d="M50,60 Q70,90 90,110 L70,100 Z" /> <path d="M140,50 Q160,80 170,90 L130,80 Z" /> <path d="M180,40 Q220,20 250,50 L230,70 Z" /> <path d="M220,90 Q240,110 260,100 L240,90 Z" /> </g>
+                                    
+                                    <rect x="5" y="5" width="290" height="140" rx="0" fill="none" stroke="#fff" stroke-width="0.5" opacity="0.5"/>
+                                </svg>
+                                <div class="absolute bottom-2 right-2 text-[8px] text-white/50 font-mono">Generated by PyGMT</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -231,64 +375,105 @@ fig.show()
         </div>
     </section>
 
-    <section id="install" class="py-20 bg-gray-900">
+    <section id="install" class="py-24 bg-gray-950">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center mb-10">快速安裝</h2>
+            <h2 class="text-3xl font-bold text-center mb-4">準備好了嗎？</h2>
+            <p class="text-center text-gray-500 mb-12">選擇最適合你的安裝方式</p>
             
-            <div class="space-y-6">
-                <div class="bg-gray-800 rounded-lg p-6 border-l-4 border-green-500 shadow-lg">
-                    <h3 class="text-lg font-bold mb-2 flex items-center">
-                        <i class="fa-solid fa-box-open mr-2 text-green-400"></i> 推薦方式 (Conda/Mamba)
-                    </h3>
-                    <p class="text-gray-400 text-sm mb-4">這是最穩定的安裝方式，因為 GMT 核心依賴較為複雜。</p>
-                    <div class="bg-black rounded p-4 font-mono text-sm flex justify-between items-center group">
-                        <code class="text-green-400">conda install -c conda-forge pygmt</code>
-                        <button onclick="copyText('conda install -c conda-forge pygmt')" class="text-gray-500 hover:text-white transition">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-gray-900 rounded-xl p-8 border border-gray-800 hover:border-green-500/50 transition duration-300 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
+                        <i class="fa-solid fa-box-open text-8xl text-green-500"></i>
+                    </div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 mr-3">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Conda / Mamba (推薦)</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6 h-10">處理所有底層 C 函式庫依賴，最穩定。</p>
+                    
+                    <div class="bg-black/50 rounded-lg p-3 font-mono text-sm border border-gray-700 flex justify-between items-center">
+                        <code class="text-green-400 truncate mr-2">conda install -c conda-forge pygmt</code>
+                        <button onclick="copyText('conda install -c conda-forge pygmt', this)" class="text-gray-500 hover:text-white transition p-2">
                             <i class="fa-regular fa-copy"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="bg-gray-800 rounded-lg p-6 border-l-4 border-yellow-500 shadow-lg">
-                    <h3 class="text-lg font-bold mb-2 flex items-center">
-                        <i class="fa-brands fa-python mr-2 text-yellow-400"></i> 替代方式 (Pip)
-                    </h3>
-                    <p class="text-gray-400 text-sm mb-4">請確保系統中已預先安裝 GMT C 函式庫。</p>
-                    <div class="bg-black rounded p-4 font-mono text-sm flex justify-between items-center group">
-                        <code class="text-yellow-400">pip install pygmt</code>
-                        <button onclick="copyText('pip install pygmt')" class="text-gray-500 hover:text-white transition">
+                <div class="bg-gray-900 rounded-xl p-8 border border-gray-800 hover:border-yellow-500/50 transition duration-300 relative overflow-hidden group">
+                     <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
+                        <i class="fa-brands fa-python text-8xl text-yellow-500"></i>
+                    </div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-400 mr-3">
+                            <i class="fa-solid fa-terminal"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Pip Install</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6 h-10">適用於進階使用者，需預先安裝 GMT。</p>
+                    
+                    <div class="bg-black/50 rounded-lg p-3 font-mono text-sm border border-gray-700 flex justify-between items-center">
+                        <code class="text-yellow-400 truncate mr-2">pip install pygmt</code>
+                        <button onclick="copyText('pip install pygmt', this)" class="text-gray-500 hover:text-white transition p-2">
                             <i class="fa-regular fa-copy"></i>
                         </button>
                     </div>
                 </div>
             </div>
+
+            <div class="mt-8 text-center">
+                <p class="text-sm text-gray-500 mb-2">不想安裝？試試雲端環境</p>
+                <a href="https://mybinder.org/v2/gh/GenericMappingTools/try-pygmt/master?filepath=index.ipynb" target="_blank" class="inline-flex items-center text-sm text-gray-400 hover:text-white transition border-b border-gray-700 hover:border-white pb-0.5">
+                    <i class="fa-solid fa-cloud mr-2"></i> Launch Binder
+                </a>
+            </div>
         </div>
     </section>
 
-    <footer class="bg-gray-950 py-10 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-gray-500 text-sm">
-                &copy; 2025 PyGMT Fan Page. Not affiliated with the official Generic Mapping Tools team.
-            </p>
-            <div class="mt-4 flex justify-center space-x-6">
-                <a href="https://github.com/GenericMappingTools/pygmt" class="text-gray-400 hover:text-white transition">
-                    <i class="fa-brands fa-github text-xl"></i>
+    <footer class="bg-black py-12 border-t border-gray-900">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <span class="font-bold text-xl tracking-wider text-white flex items-center gap-2">
+                    <i class="fa-solid fa-earth-americas text-teal-600"></i> PyGMT
+                </span>
+                <p class="text-gray-600 text-sm mt-2">
+                    非官方粉絲頁面 • 用愛發電 <i class="fa-solid fa-bolt text-yellow-500 ml-1"></i>
+                </p>
+            </div>
+            <div class="flex space-x-6">
+                <a href="https://github.com/GenericMappingTools/pygmt" class="text-gray-500 hover:text-white transition transform hover:scale-110">
+                    <i class="fa-brands fa-github text-2xl"></i>
                 </a>
-                <a href="https://forum.generic-mapping-tools.org/" class="text-gray-400 hover:text-white transition">
-                    <i class="fa-solid fa-users text-xl"></i>
+                <a href="https://forum.generic-mapping-tools.org/" class="text-gray-500 hover:text-teal-400 transition transform hover:scale-110">
+                    <i class="fa-solid fa-users text-2xl"></i>
+                </a>
+                <a href="https://www.youtube.com/channel/UCoBSysWvZfl0dO6UvE79XqA" class="text-gray-500 hover:text-red-500 transition transform hover:scale-110">
+                    <i class="fa-brands fa-youtube text-2xl"></i>
                 </a>
             </div>
         </div>
     </footer>
 
     <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 20) {
+                navbar.classList.add('shadow-lg');
+                navbar.classList.replace('bg-opacity-70', 'bg-opacity-95'); // Enhance this logic if needed
+            } else {
+                navbar.classList.remove('shadow-lg');
+            }
+        });
+
         // 模擬程式碼執行
         function runSimulation() {
             const initial = document.getElementById('initial-state');
             const spinner = document.getElementById('loading-spinner');
             const result = document.getElementById('result-image');
             
-            // 重置狀態
+            // 狀態重置
             result.classList.add('hidden');
             initial.classList.add('hidden');
             spinner.classList.remove('hidden');
@@ -302,21 +487,25 @@ fig.show()
 
         // 複製程式碼功能
         function copyCode() {
-            const code = `import pygmt\nfig = pygmt.Figure()\nfig.coast(region="g", projection="W15c", land="darkgray", water="skyblue", frame="a")\nfig.show()`;
+            const code = `import pygmt\nfig = pygmt.Figure()\nfig.coast(region="g", projection="W15c", land="#666666", water="skyblue", frame="afg")\nfig.show()`;
             navigator.clipboard.writeText(code).then(() => {
-                alert('程式碼已複製到剪貼簿！');
+                // 這裡可以加更優雅的提示，暫時保留 alert
+                const btn = document.querySelector('button[onclick="copyCode()"]');
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check text-green-400"></i> Copied';
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                }, 2000);
             });
         }
 
         // 通用複製功能
-        function copyText(text) {
+        function copyText(text, btnElement) {
             navigator.clipboard.writeText(text).then(() => {
-                // 可以加個小提示 Toast，這裡簡單處理
-                const btn = event.currentTarget;
-                const originalIcon = btn.innerHTML;
-                btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
+                const originalIcon = btnElement.innerHTML;
+                btnElement.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
                 setTimeout(() => {
-                    btn.innerHTML = originalIcon;
+                    btnElement.innerHTML = originalIcon;
                 }, 2000);
             });
         }
